@@ -47,7 +47,6 @@ coll = COLLECT(
 app = BUNDLE(
     coll,
     name="魔方原声处理.app",
-    icon="bee_icon.icns",
     bundle_identifier="com.xiaoduo.voice-analyzer",
     info_plist={
         "NSHighResolutionCapable": "True",
