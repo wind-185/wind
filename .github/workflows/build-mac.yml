@@ -1,40 +1,50 @@
-name: Build Mac App
+name: Build macOS App
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
       - master
-  workflow_dispatch:
 
 jobs:
-  build-mac:
-    runs-on: macos-latest
+  build-macos:
+    name: Build macOS ${{ matrix.arch }} zip
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: intel
+            runner: macos-13
+          - arch: apple-silicon
+            runner: macos-latest
 
     steps:
-      - name: 拉取代码
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: 安装 Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: 安装依赖
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: 打包 Mac 应用
-        run: |
-          pyinstaller --noconfirm --clean macos.spec
+      - name: Build app
+        run: pyinstaller --noconfirm --clean macos.spec
 
-      - name: 压缩 Mac 应用
-        run: |
-          ditto -c -k --sequesterRsrc --keepParent "dist/魔方原声处理.app" "魔方原声处理-macOS.zip"
+      - name: Rename app
+        run: mv "dist/MofangVoiceProcessor.app" "dist/魔方原声处理.app"
 
-      - name: 上传打包结果
+      - name: Zip app
+        run: ditto -c -k --sequesterRsrc --keepParent "dist/魔方原声处理.app" "魔方原声处理-macOS-${{ matrix.arch }}.zip"
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: 魔方原声处理-macOS
-          path: 魔方原声处理-macOS.zip
+          name: 魔方原声处理-macOS-${{ matrix.arch }}
+          path: 魔方原声处理-macOS-${{ matrix.arch }}.zip
