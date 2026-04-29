@@ -21,7 +21,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name="魔方原声处理",
+    name="MofangVoiceProcessor",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -41,14 +41,16 @@ coll = COLLECT(
     strip=False,
     upx=False,
     upx_exclude=[],
-    name="魔方原声处理",
+    name="MofangVoiceProcessor",
 )
 
 app = BUNDLE(
     coll,
-    name="魔方原声处理.app",
+    name="MofangVoiceProcessor.app",
     bundle_identifier="com.xiaoduo.voice-analyzer",
     info_plist={
+        "CFBundleDisplayName": "魔方原声处理",
+        "CFBundleName": "魔方原声处理",
         "NSHighResolutionCapable": "True",
     },
 )
