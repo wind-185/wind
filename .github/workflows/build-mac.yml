@@ -1,4 +1,4 @@
-name: Build macOS App
+name: Build macOS Intel App
 
 on:
   workflow_dispatch:
@@ -9,16 +9,8 @@ on:
 
 jobs:
   build-macos:
-    name: Build macOS ${{ matrix.arch }} zip
-    runs-on: ${{ matrix.runner }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - arch: intel
-            runner: macos-13
-          - arch: apple-silicon
-            runner: macos-latest
+    name: Build macOS intel zip
+    runs-on: macos-13
 
     steps:
       - name: Checkout
@@ -41,10 +33,10 @@ jobs:
         run: mv "dist/MofangVoiceProcessor.app" "dist/魔方原声处理.app"
 
       - name: Zip app
-        run: ditto -c -k --sequesterRsrc --keepParent "dist/魔方原声处理.app" "魔方原声处理-macOS-${{ matrix.arch }}.zip"
+        run: ditto -c -k --sequesterRsrc --keepParent "dist/魔方原声处理.app" "魔方原声处理-macOS-intel.zip"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: 魔方原声处理-macOS-${{ matrix.arch }}
-          path: 魔方原声处理-macOS-${{ matrix.arch }}.zip
+          name: 魔方原声处理-macOS-intel
+          path: 魔方原声处理-macOS-intel.zip
